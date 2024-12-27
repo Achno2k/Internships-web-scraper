@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routes import scrape
+from app.routes import scrape
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
