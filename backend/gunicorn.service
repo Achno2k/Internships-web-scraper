@@ -1,0 +1,16 @@
+# This is the service file for AWS EC2 instance to startup the web server 
+# automatically with 4 workers
+
+[Unit]
+Description = FastAPI Server for Internshala Web Scraper
+After = network.target
+
+[Service]
+User = ubuntu
+Group = ubuntu
+WorkingDirectory = /home/ubuntu/Internships-web-scraper/backend
+Environment = "PATH=/home/ubuntu/Internships-web-scraper/.venv/bin"
+ExecStart = /home/ubuntu/Internships-web-scraper/.venv/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+
+[Install]
+WantedBy = multi-user.target

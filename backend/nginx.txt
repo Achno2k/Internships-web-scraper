@@ -1,0 +1,10 @@
+# This is the file which sets up the reverse proxy using Nginx
+
+server {
+        listen 80;
+        # server_name 16.170.226.195;
+        server_name api.internscraper.achno2k.xyz
+        location / {
+                proxy_pass http://127.0.0.1:8000;
+        }
+}
