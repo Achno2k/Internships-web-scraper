@@ -14,7 +14,7 @@ export const scrapeJobs = async (filters) => {
   
     try {
       // Backend hosted on AWS EC2 instance
-      const response = await fetch("http://api.internscraper.achno2k.xyz/scrape", {
+      const response = await fetch("https://api.internscraper.achno2k.xyz/scrape", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
