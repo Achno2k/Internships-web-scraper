@@ -11,13 +11,13 @@ def scrape_internshala_jobs(filters):
     """
     # url_params = getURLParams.get_URL_parameters([], [], False, False, False, False, 0)
 
-    url_params = getURLParams.get_URL_parameters(
+    url_params: str = getURLParams.get_URL_parameters(
         filters.profiles, filters.locations, filters.intern_for_women, 
         filters.work_from_home, filters.part_time, filters.intern_ppo, 
         filters.stipend
     )
 
-    base_url = URL + url_params
+    base_url: str = URL + url_params
     print(f"Base URL: {base_url}")
 
     # fetching the first page in order to get the available pages
@@ -28,21 +28,21 @@ def scrape_internshala_jobs(filters):
     soup = BeautifulSoup(response.content, "html.parser")
 
     total_pages_span = soup.find(id ="total_pages")
-    total_pages = int(total_pages_span.text.strip()) if total_pages_span else 1  # default to 1 page if not found
+    total_pages: int = int(total_pages_span.text.strip()) if total_pages_span else 1  # default to 1 page if not found
     # print(total_pages)
 
     jobs = []
     
 
     # Scraping maximum of 10 pages ensure efficiency and not overloading the server 
-    max_pages = 10
+    max_pages: int = 10
     if total_pages < 10:
         max_pages = total_pages
     print (max_pages)
 
     for page in range(1, max_pages + 1):
         print (f"Fetching {page}..")
-        page_url = f"{base_url}/page-{page}"
+        page_url: str = f"{base_url}/page-{page}"
         response = requests.get(page_url)
 
         if response.status_code != 200:
@@ -56,11 +56,11 @@ def scrape_internshala_jobs(filters):
             try:
                 # Extracting job title
                 title_element = job.find("a", class_="job-title-href")
-                title = title_element.text.strip() if title_element else "Not available"
+                title: str = title_element.text.strip() if title_element else "Not available"
 
                 # Extracting company name
                 company_element = job.find("div", class_="heading_6 company_name").find("div", class_="company_and_premium").find("p", class_="company-name")
-                company = company_element.text.strip() if company_element else "Not available"
+                company: str = company_element.text.strip() if company_element else "Not available"
 
                 # Extracting the div with other information
                 info_div = job.find("div", class_="detail-row-1")
@@ -75,7 +75,7 @@ def scrape_internshala_jobs(filters):
                     # print (location, duration, stipend)
 
                 # Extracting the applying link
-                link = job.find("a", class_="job-title-href")['href']
+                link: str = job.find("a", class_="job-title-href")['href']
                 # Extracting the time of when the job was posted
                 posted_time = job.find("div", class_="detail-row-2").find("span").text.strip()
 

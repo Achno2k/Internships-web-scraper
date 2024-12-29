@@ -13,7 +13,7 @@ def create_excel_from_jobs(jobs, file_path):
            
            worksheet = writer.sheets["Jobs"]
            
-           # Bold headers and set column widths
+           # Bold headers and column widths
            for idx, column in enumerate(df.columns):
                column_letter = chr(65 + idx)
                worksheet.column_dimensions[column_letter].width = max(len(str(val)) for val in df[column]) + 6

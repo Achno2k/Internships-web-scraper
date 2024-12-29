@@ -1,7 +1,11 @@
 from typing import List, Optional
 from . import getParameters as gp
 
-def get_URL_parameters(profiles: Optional[List[str]] = None, locations: Optional[List[str]] = None, intern_for_women: bool = None, work_from_home: bool = None, part_time: bool = None, intern_ppo: bool = None, stipend: int = None):
+def get_URL_parameters(profiles: Optional[List[str]] = None, 
+                       locations: Optional[List[str]] = None, 
+                       intern_for_women: bool = None, work_from_home: bool = None, 
+                       part_time: bool = None, intern_ppo: bool = None, 
+                       stipend: int = None) -> str:
     URL_PARAMS = ""
 
     if intern_for_women == True:

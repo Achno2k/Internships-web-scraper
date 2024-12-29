@@ -1,10 +1,12 @@
-def select_categories(category_list):
+from typing import List
+
+def select_categories(category_list: List[str]) -> str:
     if category_list == []:
         return ""
     
-    final_params = []
+    final_params: List[str] = []
     for category in category_list:
-        category = category.strip()
+        category: str = category.strip()
         if '/' in list(category):
             category = category.replace('/','%2F')
             final_params.append(category.split(' ')[0])
@@ -12,11 +14,11 @@ def select_categories(category_list):
             category = category.replace(' ','%20')
             final_params.append(category)
 
-    final_params = ','.join(final_params)
-    final_params+='-internship'
+    final_params  = ','.join(final_params)
+    final_params += '-internship'
     return final_params
 
-def select_locations(location_list):
+def select_locations(location_list: List[str]) -> str:
     if location_list == []:
         return ""
     

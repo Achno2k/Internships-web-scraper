@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from app.routes import scrape
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List
 
 app = FastAPI()
 
 app.include_router(scrape.router)
 
-origins = ["*"]
+origins: List[str] = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
