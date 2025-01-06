@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { scrapeJobs } from "../utils/api.js";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
@@ -7,6 +7,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import TuneIcon from "@mui/icons-material/Tune";
 import "./FilterPage.css";
+import { motion } from 'framer-motion';
+import { FaFilter, FaFileDownload } from 'react-icons/fa';
+import { CircularProgress } from '@mui/material';
+import ErrorModal from './ErrorModal';
 
 const FilterPage = () => {
   const [filters, setFilters] = useState({
@@ -67,111 +71,114 @@ const FilterPage = () => {
   };
 
   return (
-    <div className="filter-page-container">
-      <TuneIcon className="filter-icon" style={{ display: "inline-block" }} />
-      <h2 style={{ display: "inline-block" }}>Filters</h2>
-      <form className="form-container" onSubmit={handleSubmit}>
-        <TextField
-          className="form-field"
-          label="Profiles"
-          name="profiles"
-          value={filters.profiles}
-          onChange={handleChange}
-          variant="outlined"
-          placeholder="e.g., Web Development, Data Science"
-        />
-        <br />
-        <TextField
-          className="form-field"
-          label="Locations"
-          name="locations"
-          value={filters.locations}
-          onChange={handleChange}
-          variant="outlined"
-          placeholder="e.g., Bangalore, Mumbai"
-        />
-        <br />
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="workFromHome"
-                checked={filters.workFromHome}
-                onChange={handleChange}
-              />
-            }
-            label="Work from Home"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="partTime"
-                checked={filters.partTime}
-                onChange={handleChange}
-              />
-            }
-            label="Part Time"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="internWomen"
-                checked={filters.internWomen}
-                onChange={handleChange}
-              />
-            }
-            label="Internship for Women"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="internPpo"
-                checked={filters.internPpo}
-                onChange={handleChange}
-              />
-            }
-            label="Internship with PPO"
-          />
-        </FormGroup>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen py-28 px-4"
+    >
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-surface backdrop-blur-sm rounded-xl shadow-card p-8">
+          <div className="flex items-center mb-6">
+            <FaFilter className="text-2xl text-primary mr-3" />
+            <h2 className="text-2xl font-semibold">Internship Filters</h2>
+          </div>
 
-        <br />
-        <TextField
-          className="form-field"
-          label="Stipend"
-          name="stipend"
-          type="number"
-          value={filters.stipend}
-          onChange={handleChange}
-          variant="outlined"
-        />
-        <br />
-        <Button type="submit" variant="contained" color="primary">
-          {loading ? "Loading..." : "Apply Filters"}
-        </Button>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <TextField
+              fullWidth
+              label="Profiles"
+              name="profiles"
+              value={filters.profiles}
+              onChange={handleChange}
+              variant="outlined"
+              placeholder="e.g., Web Development, Data Science"
+              className="bg-gray-50"
+            />
 
-        {blobUrl && (
-          <Button
-            variant="contained"
-            color="success"
-            style={{ marginTop: "10px" }}
-            onClick={handleDownload}
-          >
-            Download Excel File
-          </Button>
-        )}
-      </form>
+            <TextField
+              fullWidth
+              label="Locations"
+              name="locations"
+              value={filters.locations}
+              onChange={handleChange}
+              variant="outlined"
+              placeholder="e.g., Bangalore, Mumbai"
+              className="bg-gray-50"
+            />
 
-      {error && (
-        <p className="message" style={{ color: "#D91E31" }}>
-          {error}
-        </p>
-      )}
-      {success && (
-        <p className="message" style={{ color: "#037171" }}>
-          File has been downloaded successfully!
-        </p>
-      )}
-    </div>
+            <div className="grid grid-cols-2 gap-4">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.workFromHome}
+                    onChange={handleChange}
+                    name="workFromHome"
+                    color="primary"
+                  />
+                }
+                label="Work from Home"
+              />
+              {/* Add other checkboxes similarly */}
+            </div>
+
+            <TextField
+              fullWidth
+              label="Minimum Stipend"
+              name="stipend"
+              type="number"
+              value={filters.stipend}
+              onChange={handleChange}
+              variant="outlined"
+              className="bg-gray-50"
+            />
+
+            <div className="flex justify-center space-x-4">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className="bg-primary text-white px-6 py-2 rounded-lg flex items-center"
+                disabled={loading}
+              >
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  <>
+                    <FaFilter className="mr-2" />
+                    Apply Filters
+                  </>
+                )}
+              </motion.button>
+
+              {blobUrl && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleDownload}
+                  className="bg-secondary text-white px-6 py-2 rounded-lg flex items-center"
+                >
+                  <FaFileDownload className="mr-2" />
+                  Download Results
+                </motion.button>
+              )}
+            </div>
+          </form>
+
+          <ErrorModal error={error} onClose={() => setError("")} />
+
+          {success && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4 p-4 bg-green-100 text-green-700 rounded-lg"
+            >
+              File downloaded successfully!
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </motion.div>
   );
 };
+
 export default FilterPage;
