@@ -2,10 +2,7 @@ import { useState } from "react";
 import { scrapeJobs } from "../utils/api.js";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
-import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import TuneIcon from "@mui/icons-material/Tune";
 import "./FilterPage.css";
 import { motion } from 'framer-motion';
 import { FaFilter, FaFileDownload } from 'react-icons/fa';
@@ -118,7 +115,39 @@ const FilterPage = () => {
                 }
                 label="Work from Home"
               />
-              {/* Add other checkboxes similarly */}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.partTime}
+                    onChange={handleChange}
+                    name="partTime"
+                    color="primary"
+                  />
+                }
+                label="Part Time"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.internWomen}
+                    onChange={handleChange}
+                    name="internWomen"
+                    color="primary"
+                  />
+                }
+                label="Internships for Women"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.internPpo}
+                    onChange={handleChange}
+                    name="internPpo"
+                    color="primary"
+                  />
+                }
+                label="Internships for PPO"
+              />
             </div>
 
             <TextField
