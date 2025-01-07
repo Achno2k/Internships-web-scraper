@@ -1,44 +1,42 @@
 import React from "react";
-import "./Footer.css";
-import githubLogo from "../assets/github.png";
-import linkedinLogo from "../assets/linkedin.png";
-import instagramLogo from "../assets/instagram.png";
+import { FaGithub, FaLinkedin, FaInstagram, FaHeart } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-container">
-        <div className="footer-contact">
-          <p>Contact : <a href="mailto:amansighh525@gmail.com">amansighh525@gmail.com</a></p>
+    <footer className="bg-gray-900 text-white py-8">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-4 md:mb-0">
+            <p className="text-lg">
+              Contact: <a href="mailto:amansinghh525@gmail.com" 
+                         className="hover:text-primary transition duration-300">
+                amansinghh525@gmail.com
+              </a>
+            </p>
+          </div>
+          
+          <div className="flex space-x-6">
+            {[
+              { icon: <FaGithub />, url: 'https://github.com/Achno2k' },
+              { icon: <FaLinkedin />, url: 'https://www.linkedin.com/in/amansingh0612/' },
+              { icon: <FaInstagram />, url: 'https://www.instagram.com/amansingh0612/' }
+            ].map((social, index) => (
+              <a
+                key={index}
+                href={social.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-2xl hover:text-primary transition duration-300"
+              >
+                {social.icon}
+              </a>
+            ))}
+          </div>
         </div>
-        <div className="footer-socials">
-          <a href="https://github.com/Achno2k" target="_blank" rel="noreferrer">
-            <div className="icon-wrapper">
-              <img src={githubLogo} alt="GitHub" className="social-icon" />
-            </div>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/amansingh0612/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div className="icon-wrapper">
-              <img src={linkedinLogo} alt="LinkedIn" className="social-icon" />
-            </div>
-          </a>
-          <a
-            href="https://www.instagram.com/amansingh0612/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div className="icon-wrapper">
-              <img src={instagramLogo} alt="Instagram" className="social-icon" />
-            </div>
-          </a>
-        </div>
-        <div className="footer-made">
-          <p>
-            Made with ❤️ by Aman Singh
+        
+        <div className="text-center mt-6">
+          <p className="flex items-center justify-center">
+            Made with <FaHeart className="text-red-500 mx-2" /> by Aman Singh
           </p>
         </div>
       </div>
