@@ -77,7 +77,7 @@ def scrape_internshala_jobs(filters):
                 # Extracting the applying link
                 link: str = job.find("a", class_="job-title-href")['href']
                 # Extracting the time of when the job was posted
-                posted_time = job.find("div", class_="detail-row-2").find("span").text.strip()
+                posted_time: str = str(job.find("div", class_="detail-row-2").find("span").text.strip())
 
                 # adding job details to the list
                 jobs.append({

@@ -1,70 +1,44 @@
 import { useState } from "react";
-import { scrapeJobs } from "../utils/api.js";
-import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { motion } from "framer-motion";
+import { FaFilter, FaFileDownload } from "react-icons/fa";
+import {
+  CircularProgress,
+  Autocomplete,
+  MenuItem,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+
+import CheckIcon from "@mui/icons-material/Check";
+import ErrorModal from "./ErrorModal";
+import { profileOptions, locationOptions } from "../utils/dropDownUtils.js";
+import {
+  useFilterState,
+  handleJobScraping,
+  handleDownloadFile,
+} from "../utils/filterPageUtils.js";
 import "./FilterPage.css";
-import { motion } from 'framer-motion';
-import { FaFilter, FaFileDownload } from 'react-icons/fa';
-import { CircularProgress } from '@mui/material';
-import ErrorModal from './ErrorModal';
+import { PreviewPage } from "./PreviewPage.jsx";
 
 const FilterPage = () => {
-  const [filters, setFilters] = useState({
-    profiles: "",
-    locations: "",
-    workFromHome: false,
-    partTime: false,
-    internWomen: false,
-    internPpo: false,
-    stipend: 0,
-  });
+  const { filters, handleChange, handleListChange } = useFilterState();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [blobUrl, setBlobUrl] = useState("");
+  const [jobs, setJobs] = useState([]);
+  const [userId, setUserId] = useState("");
+  const [preview, setPreview] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccess(false);
-    setBlobUrl("");
-
-    try {
-      const blob = await scrapeJobs(filters);
-      const url = window.URL.createObjectURL(blob);
-      setBlobUrl(url);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    handleJobScraping(filters, setLoading, setError, setJobs, setUserId, setPreview);
   };
 
-  // Function to handle download when the button is clicked
   const handleDownload = () => {
-    if (blobUrl) {
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = "scraped_jobs.xlsx"; 
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(blobUrl); 
-      setTimeout(() => {
-        setSuccess(true)
-        setBlobUrl("");
-      }, 2000); 
-    }
+    handleDownloadFile(userId, setBlobUrl, setSuccess);
   };
 
   return (
@@ -73,7 +47,7 @@ const FilterPage = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen py-28 px-4"
     >
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <div className="bg-surface backdrop-blur-sm rounded-xl shadow-card p-8">
           <div className="flex items-center mb-6">
             <FaFilter className="text-2xl text-primary mr-3" />
@@ -81,26 +55,64 @@ const FilterPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <TextField
-              fullWidth
-              label="Profiles"
-              name="profiles"
+            <Autocomplete
+              multiple
+              options={profileOptions}
+              getOptionLabel={(option) => option}
               value={filters.profiles}
-              onChange={handleChange}
-              variant="outlined"
-              placeholder="e.g., Web Development, Data Science"
-              className="bg-gray-50"
+              onChange={(event, value) =>
+                handleListChange(event, value, "profiles")
+              }
+              disableCloseOnSelect
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  label="Profiles"
+                  variant="outlined"
+                  placeholder="e.g., Data Science"
+                  className="bg-gray-50"
+                />
+              )}
+              renderOption={(props, option, { selected }) => (
+                <MenuItem
+                  {...props}
+                  key={option}
+                  sx={{ justifyContent: "space-between" }}
+                >
+                  {option}
+                  {selected && <CheckIcon color="info" />}
+                </MenuItem>
+              )}
             />
 
-            <TextField
-              fullWidth
-              label="Locations"
-              name="locations"
+            <Autocomplete
+              multiple
+              options={locationOptions}
+              getOptionLabel={(option) => option}
               value={filters.locations}
-              onChange={handleChange}
-              variant="outlined"
-              placeholder="e.g., Bangalore, Mumbai"
-              className="bg-gray-50"
+              onChange={(event, value) => handleListChange(event, value, "locations")}
+              disableCloseOnSelect
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  label="Locations"
+                  variant="outlined"
+                  placeholder="e.g., Delhi"
+                  className="bg-gray-50"
+                />
+              )}
+              renderOption={(props, option, { selected }) => (
+                <MenuItem
+                  {...props}
+                  key={option}
+                  sx={{ justifyContent: "space-between" }}
+                >
+                  {option}
+                  {selected && <CheckIcon color="info" />}
+                </MenuItem>
+              )}
             />
 
             <div className="grid grid-cols-2 gap-4">
@@ -178,34 +190,12 @@ const FilterPage = () => {
                   </>
                 )}
               </motion.button>
-
-              {blobUrl && (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleDownload}
-                  className="bg-secondary text-white px-6 py-2 rounded-lg flex items-center"
-                >
-                  <FaFileDownload className="mr-2" />
-                  Download Results
-                </motion.button>
-              )}
             </div>
           </form>
-
           <ErrorModal error={error} onClose={() => setError("")} />
-
-          {success && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-4 p-4 bg-green-100 text-green-700 rounded-lg"
-            >
-              File downloaded successfully!
-            </motion.div>
-          )}
         </div>
       </div>
+      <PreviewPage jobs={jobs} preview={preview} success={success} handleDownload={handleDownload}/>
     </motion.div>
   );
 };

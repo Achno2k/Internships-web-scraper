@@ -10,3 +10,21 @@ class Applied_filters(BaseModel):
     intern_ppo: bool = False
     stipend: int = 0
 
+class ReturnedJobs(BaseModel):
+    Title: str
+    Company: str
+    Location: str
+    Duration: str
+    Stipend: str
+    Link: str
+    Posted_time: str
+
+
+class ReturnedJSON(ReturnedJobs):
+    user_id: str
+    jobs: List[ReturnedJobs]
+
+    class Config():
+        from_attributes = True
+
+

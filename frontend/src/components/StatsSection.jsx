@@ -4,8 +4,8 @@ import { FaUsers, FaBuilding, FaGlobe } from 'react-icons/fa';
 
 const StatsSection = () => {
   const stats = [
-    { icon: <FaUsers />, value: '10,000+', label: 'Active Users' },
-    { icon: <FaBuilding />, value: '5,000+', label: 'Companies' },
+    { icon: <FaUsers />, value: '100+', label: 'Active Users' },
+    { icon: <FaBuilding />, value: '10+', label: 'Companies' },
     { icon: <FaGlobe />, value: '20+', label: 'Countries' },
   ];
 
