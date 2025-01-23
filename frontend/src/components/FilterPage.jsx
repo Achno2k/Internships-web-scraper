@@ -34,7 +34,7 @@ const FilterPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleJobScraping(filters, setLoading, setError, setJobs, setUserId, setPreview);
+    handleJobScraping(filters, setLoading, setError, setJobs, setUserId, setPreview, setSuccess);
   };
 
   const handleDownload = () => {

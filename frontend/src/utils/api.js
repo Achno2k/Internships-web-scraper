@@ -2,7 +2,7 @@ export const scrapeJobs = async (filters) => {
   try {
     // Backend hosted on AWS EC2 instance
     // Backend hosted URL for production - https://api.internscraper.achno2k.xyz/scrape
-    const response = await fetch("https://api.internscraper.achno2k.xyz/scrape", {
+    const response = await fetch("http://127.0.0.1:8000/scrape", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const scrapeJobs = async (filters) => {
 
 export const downloadExcelFile = async (userId) => {
   try {
-    const response = await fetch(`https://api.internscraper.achno2k.xyz/download?user_id=${userId}`);
+    const response = await fetch(`http://127.0.0.1:8000/download?user_id=${userId}`);
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Failed to download the Excel file.");

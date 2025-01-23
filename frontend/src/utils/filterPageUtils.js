@@ -29,9 +29,10 @@ export const useFilterState = () => {
   return { filters, setFilters, handleChange, handleListChange };
 };
 
-export const handleJobScraping = async (filters, setLoading, setError, setJobs, setUserId, setPreview) => {
+export const handleJobScraping = async (filters, setLoading, setError, setJobs, setUserId, setPreview, setSuccess) => {
   setLoading(true);
   setError("");
+  setSuccess(false);
   try {
     const res_jobs = await scrapeJobs(filters);
     // console.log(res_jobs.jobs)
@@ -53,7 +54,7 @@ export const handleDownloadFile = async (userId, setBlobUrl, setSuccess) => {
 
     const link = document.createElement("a");
     link.href = blobUrl;
-    link.download = "internships.xlsx"; 
+    link.download = `${userId}.xlsx`; 
     document.body.appendChild(link); 
     link.click();
     link.remove(); 
