@@ -1,8 +1,8 @@
 {
-    "rewrites": [
+    "routes": [
       {
-        "source": "/filters",
-        "destination": "https://internscraper.achno2k.xyz/"
+        "src": "/(.*)",
+        "dest": "/index.html"
       }
     ]
   }
